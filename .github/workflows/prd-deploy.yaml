@@ -1,0 +1,42 @@
+name: Deploy to PRD
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+
+  deploy-prd:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+
+        uses: azure/login@v2
+
+        with:
+
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS Context
+
+        uses: azure/aks-set-context@v3
+
+        with:
+
+          resource-group: hands-on-rg
+
+          cluster-name: demo-aks
+
+      - name: Deploy to PRD namespace
+
+        run: |
+
+          kubectl apply -f k8s/prd-deployment.yaml
+ 
